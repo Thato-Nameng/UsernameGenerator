@@ -50,15 +50,20 @@ def create_user_name(first_name, last_name, studyYear, final_campus):
 
     print(f"Final username: {username}")
 
+    if username_exists(username):
+        print("Username already exists.")
+        choice = input("Do you want to start again? (yes/no): ")
+        if choice.lower() == "yes":
+            print()
+            InputData()
+            return 
+        else:
+            print("Exiting the program.")
+            return
+
     confirmation = input("Is the username correct? (yes/no): ")
     if confirmation.lower() == "yes":
-        with open("username.txt", "w") as file:
-            file.write(f"First Name: {first_name}\n")
-            file.write(f"Last Name: {last_name}\n")
-            file.write(f"Study Year: {studyYear}\n")
-            file.write(f"Campus: {final_campus}\n")
-            file.write(f"Username: {username}\n")
-        print("Your data has been saved to username.txt")
+        save_username_to_file(username, first_name, last_name, studyYear, final_campus)
     else:
         print("Please run the program again to generate a new username.")
      
@@ -69,6 +74,26 @@ def create_user_name(first_name, last_name, studyYear, final_campus):
 def campus(campus):
     valid_campuses = {"cape town": "cpt", "johannesburg": "jhb", "pretoria": "pta", "durban": "dbn", "rustenburg": "rus"}
     return valid_campuses.get(campus.lower(), "")
+
+
+def username_exists(new_username):
+    with open("username.txt", "r") as file:
+        for line in file:
+            if "Username:" in line:
+                existing_username = line.split(":")[1].strip()
+                if existing_username == new_username:
+                    return True
+    return False
+
+def save_username_to_file(username, first_name, last_name, studyYear, final_campus):
+    with open("username.txt", "a") as file:
+        file.write(f"First Name: {first_name}\n")
+        file.write(f"Last Name: {last_name}\n")
+        file.write(f"Study Year: {studyYear}\n")
+        file.write(f"Campus: {final_campus}\n")
+        file.write(f"Username: {username}\n")
+        file.write(f"===================================\n")
+    print("Your data has been saved to username.txt")
 
 
 if __name__ == '__main__':
